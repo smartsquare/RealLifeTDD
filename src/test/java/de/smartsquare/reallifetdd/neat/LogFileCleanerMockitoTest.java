@@ -1,10 +1,11 @@
-package de.smartsquare.reallifetdd.ugly;
+package de.smartsquare.reallifetdd.neat;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -15,15 +16,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import de.smartsquare.reallifetdd.Calendar;
 
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( LogFileCleaner.class )
-public class LogFileCleanerPowermockTest {
+@RunWith( MockitoJUnitRunner.class )
+public class LogFileCleanerMockitoTest {
 
     @Mock
     private File pwd;
@@ -34,33 +32,38 @@ public class LogFileCleanerPowermockTest {
     @Mock
     private FileCleaner fileCleaner;
 
-    @Mock
-    private Calendar calendar;
-
     private LogFileCleaner logFileCleaner;
 
     @Before
     public void setup()
         throws Exception {
         // mock current directory containing one log file
-        when( logfile.getAbsolutePath() ).thenReturn( "path/to/file.log" );
+        when( logfile.isFile() ).thenReturn( true );
         when( pwd.listFiles() ).thenReturn( new File[] { logfile } );
-        PowerMockito.whenNew( File.class ).withAnyArguments().thenReturn( pwd );
 
-        PowerMockito.whenNew( FileCleaner.class ).withAnyArguments().thenReturn( fileCleaner );
-
-        logFileCleaner = new LogFileCleaner();
+        logFileCleaner = new LogFileCleaner( fileCleaner, mock( Calendar.class ) );
     }
 
     @Test
     public void should_delete_log_file()
         throws IOException {
-        when( logfile.isFile() ).thenReturn( true );
+        when( logfile.getAbsolutePath() ).thenReturn( "path/to/file.log" );
         when( fileCleaner.cleanFileModifiedBeforeDate( isA( File.class ), any( Date.class ) ) ).thenReturn( true );
 
-        int fileCount = logFileCleaner.cleanLogFiles();
+        int fileCount = logFileCleaner.cleanLogFiles( pwd );
 
         assertThat( fileCount, is( equalTo( 1 ) ) );
+    }
+
+    @Test
+    public void should_not_delete_non_log_file()
+        throws IOException {
+        when( logfile.getAbsolutePath() ).thenReturn( "path/to/file.txt" );
+        when( fileCleaner.cleanFileModifiedBeforeDate( isA( File.class ), any( Date.class ) ) ).thenReturn( true );
+
+        int fileCount = logFileCleaner.cleanLogFiles( pwd );
+
+        assertThat( fileCount, is( equalTo( 0 ) ) );
     }
 
 }

@@ -1,4 +1,4 @@
-package de.smartsquare.reallifetdd.ugly;
+package de.smartsquare.reallifetdd;
 
 import java.util.Date;
 
