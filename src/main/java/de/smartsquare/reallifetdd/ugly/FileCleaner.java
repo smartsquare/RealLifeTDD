@@ -17,7 +17,7 @@ public class FileCleaner {
         calendar.setTimeInMillis( fileTime.toMillis() );
         Date modifiedDate = calendar.getTime();
 
-        if ( modifiedDate.after( date ) ) {
+        if ( modifiedDate.before( date ) ) {
             return file.delete();
         }
 
