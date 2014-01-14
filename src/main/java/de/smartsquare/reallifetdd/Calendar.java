@@ -10,4 +10,8 @@ public class Calendar {
         calendar.add( java.util.Calendar.DAY_OF_MONTH, -7 );
         return calendar.getTime();
     }
+
+    public Date getDateFor( long millis ) {
+        return new Date( millis );
+    }
 }
