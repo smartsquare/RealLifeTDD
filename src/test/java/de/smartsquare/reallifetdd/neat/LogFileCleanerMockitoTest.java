@@ -41,6 +41,8 @@ public class LogFileCleanerMockitoTest {
         when( logfile.isFile() ).thenReturn( true );
         when( pwd.listFiles() ).thenReturn( new File[] { logfile } );
 
+        when( fileCleaner.cleanFileModifiedBeforeDate( isA( File.class ), any( Date.class ) ) ).thenReturn( true );
+
         logFileCleaner = new LogFileCleaner( fileCleaner, mock( Calendar.class ) );
     }
 
@@ -48,7 +50,6 @@ public class LogFileCleanerMockitoTest {
     public void should_delete_log_file()
         throws IOException {
         when( logfile.getAbsolutePath() ).thenReturn( "path/to/file.log" );
-        when( fileCleaner.cleanFileModifiedBeforeDate( isA( File.class ), any( Date.class ) ) ).thenReturn( true );
 
         int fileCount = logFileCleaner.cleanLogFiles( pwd );
 
@@ -59,7 +60,6 @@ public class LogFileCleanerMockitoTest {
     public void should_not_delete_non_log_file()
         throws IOException {
         when( logfile.getAbsolutePath() ).thenReturn( "path/to/file.txt" );
-        when( fileCleaner.cleanFileModifiedBeforeDate( isA( File.class ), any( Date.class ) ) ).thenReturn( true );
 
         int fileCount = logFileCleaner.cleanLogFiles( pwd );
 
