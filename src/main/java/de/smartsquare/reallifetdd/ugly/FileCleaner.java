@@ -15,8 +15,9 @@ public class FileCleaner {
         FileTime fileTime = Files.getLastModifiedTime( file.toPath(), LinkOption.NOFOLLOW_LINKS );
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis( fileTime.toMillis() );
+        Date modifiedDate = calendar.getTime();
 
-        if ( date.before( calendar.getTime() ) ) {
+        if ( modifiedDate.after( date ) ) {
             return file.delete();
         }
 
