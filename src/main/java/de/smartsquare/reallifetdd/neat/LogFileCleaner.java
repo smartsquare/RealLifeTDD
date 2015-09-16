@@ -3,8 +3,6 @@ package de.smartsquare.reallifetdd.neat;
 import java.io.File;
 import java.io.IOException;
 
-import de.smartsquare.reallifetdd.Calendar;
-
 public class LogFileCleaner {
 
     private FileCleaner fileCleaner;

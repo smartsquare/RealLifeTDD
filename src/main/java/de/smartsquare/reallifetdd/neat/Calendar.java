@@ -1,4 +1,4 @@
-package de.smartsquare.reallifetdd;
+package de.smartsquare.reallifetdd.neat;
 
 import java.util.Date;
 

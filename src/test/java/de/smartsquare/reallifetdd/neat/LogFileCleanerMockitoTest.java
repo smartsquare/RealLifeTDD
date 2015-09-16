@@ -18,8 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.smartsquare.reallifetdd.Calendar;
-
 @RunWith( MockitoJUnitRunner.class )
 public class LogFileCleanerMockitoTest {
 

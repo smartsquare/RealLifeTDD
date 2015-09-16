@@ -7,8 +7,6 @@ import java.nio.file.LinkOption;
 import java.nio.file.attribute.FileTime;
 import java.util.Date;
 
-import de.smartsquare.reallifetdd.Calendar;
-
 public class FileAttributes {
 
     private Calendar calendar;
