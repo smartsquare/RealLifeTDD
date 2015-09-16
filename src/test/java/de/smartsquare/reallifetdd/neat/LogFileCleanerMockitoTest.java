@@ -4,8 +4,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -39,19 +41,32 @@ public class LogFileCleanerMockitoTest {
         when( logfile.isFile() ).thenReturn( true );
         when( pwd.listFiles() ).thenReturn( new File[] { logfile } );
 
-        when( fileCleaner.cleanFileModifiedBeforeDate( isA( File.class ), any( Date.class ) ) ).thenReturn( true );
-
         logFileCleaner = new LogFileCleaner( fileCleaner, mock( Calendar.class ) );
     }
 
     @Test
-    public void should_delete_log_file()
+    public void should_delete_log_file_older_than_one_week()
         throws IOException {
+    	boolean deleteFile = true;
+    	when( fileCleaner.cleanFileModifiedBeforeDate( eq(logfile), any( Date.class ) ) ).thenReturn( deleteFile );
         when( logfile.getAbsolutePath() ).thenReturn( "path/to/file.log" );
 
         int fileCount = logFileCleaner.cleanLogFiles( pwd );
 
         assertThat( fileCount, is( equalTo( 1 ) ) );
+    }
+    
+    @Test
+    public void should_not_delete_log_file_younger_than_one_week()
+    		throws IOException {
+    	boolean deleteFile = false;
+    	when( fileCleaner.cleanFileModifiedBeforeDate( eq(logfile), any( Date.class ) ) ).thenReturn( deleteFile );
+    	when( logfile.getAbsolutePath() ).thenReturn( "path/to/file.log" );
+    	
+    	int fileCount = logFileCleaner.cleanLogFiles( pwd );
+    	
+    	verify(fileCleaner).cleanFileModifiedBeforeDate(eq(logfile), any(Date.class));
+    	assertThat( fileCount, is( equalTo( 0 ) ) );
     }
 
     @Test
@@ -61,6 +76,7 @@ public class LogFileCleanerMockitoTest {
 
         int fileCount = logFileCleaner.cleanLogFiles( pwd );
 
+        verify(fileCleaner, never()).cleanFileModifiedBeforeDate(any(File.class), any(Date.class));
         assertThat( fileCount, is( equalTo( 0 ) ) );
     }
 

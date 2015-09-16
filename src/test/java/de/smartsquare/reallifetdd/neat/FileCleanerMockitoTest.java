@@ -1,6 +1,5 @@
 package de.smartsquare.reallifetdd.neat;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,7 +39,7 @@ public class FileCleanerMockitoTest {
     public void should_delete_file_if_modified_before_given_date()
         throws IOException {
         calendar.add( Calendar.DAY_OF_MONTH, -1 );
-        when( fileAttributes.getLastModifiedTime( any( File.class ) ) ).thenReturn( calendar.getTime() );
+        when( fileAttributes.getLastModifiedTime( file ) ).thenReturn( calendar.getTime() );
 
         fileCleaner.cleanFileModifiedBeforeDate( file, new Date() );
 
@@ -50,7 +49,7 @@ public class FileCleanerMockitoTest {
     @Test
     public void should_not_delete_file_if_modified_equalTo_or_after_given_date()
         throws IOException {
-        when( fileAttributes.getLastModifiedTime( any( File.class ) ) ).thenReturn( calendar.getTime() );
+        when( fileAttributes.getLastModifiedTime( file ) ).thenReturn( calendar.getTime() );
 
         fileCleaner.cleanFileModifiedBeforeDate( file, calendar.getTime() );
 
