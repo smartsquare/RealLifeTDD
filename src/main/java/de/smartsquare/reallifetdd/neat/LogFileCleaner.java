@@ -5,9 +5,9 @@ import java.io.IOException;
 
 public class LogFileCleaner {
 
-    private FileCleaner fileCleaner;
+    private final FileCleaner fileCleaner;
 
-    private Calendar calendar;
+    private final Calendar calendar;
 
     public LogFileCleaner( FileCleaner fileCleaner, Calendar calendar ) {
         this.fileCleaner = fileCleaner;
